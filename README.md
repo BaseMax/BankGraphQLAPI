@@ -242,6 +242,349 @@ Response:
 }
 ```
 
+Create a new transaction
+
+```graphql
+mutation {
+  createTransaction(input: {
+    senderNationalIdCode: "1234567890",
+    receiverNationalIdCode: "0987654321",
+    amount: 100.0
+  }) {
+    id
+    sender {
+      id
+      nationalIdCode
+    }
+    receiver {
+      id
+      nationalIdCode
+    }
+    amount
+  }
+}
+```
+
+Response:
+
+```json
+{
+  "data": {
+    "createTransaction": {
+      "id": "1",
+      "sender": {
+        "id": "1",
+        "nationalIdCode": "1234567890"
+      },
+      "receiver": {
+        "id": "2",
+        "nationalIdCode": "0987654321"
+      },
+      "amount": 100.0
+    }
+  }
+}
+```
+
+Get all transactions
+
+```graphql
+query {
+  getAllTransactions {
+    id
+    sender {
+      id
+      nationalIdCode
+    }
+    receiver {
+      id
+      nationalIdCode
+    }
+    amount
+    createdAt
+  }
+}
+```
+
+Response:
+
+```json
+{
+  "data": {
+    "getAllTransactions": [
+      {
+        "id": "1",
+        "sender": {
+          "id": "1",
+          "nationalIdCode": "1234567890"
+        },
+        "receiver": {
+          "id": "2",
+          "nationalIdCode": "0987654321"
+        },
+        "amount": 100.0,
+        "createdAt": "2023-05-09T11:15:30.000Z"
+      },
+      {
+        "id": "2",
+        "sender": {
+          "id": "2",
+          "nationalIdCode": "0987654321"
+        },
+        "receiver": {
+          "id": "1",
+          "nationalIdCode": "1234567890"
+        },
+        "amount": 50.0,
+        "createdAt": "2023-05-09T11:17:30.000Z"
+      }
+    ]
+  }
+}
+```
+
+Get all transactions for a client
+
+```graphql
+query {
+  getTransactionsForClient(nationalIdCode: "1234567890") {
+    id
+    sender {
+      id
+      nationalIdCode
+    }
+    receiver {
+      id
+      nationalIdCode
+    }
+    amount
+    createdAt
+  }
+}
+```
+
+Response:
+
+```json
+{
+  "data": {
+    "getTransactionsForClient": [
+      {
+        "id": "1",
+        "sender": {
+          "id": "1",
+          "nationalIdCode": "1234567890"
+        },
+        "receiver": {
+          "id": "2",
+          "nationalIdCode": "0987654321"
+        },
+        "amount": 100.0,
+        "createdAt": "2023-05-09T11:15:30.000Z"
+      },
+      {
+        "id": "2",
+        "sender": {
+          "id": "2",
+          "nationalIdCode": "0987654321"
+        },
+        "receiver": {
+          "id": "1",
+          "nationalIdCode": "1234567890"
+        },
+        "amount": 50.0,
+        "createdAt": "2023-05-09T11:17:30.000Z"
+      }
+    ]
+  }
+}
+```
+
+Get account balance for a client
+
+```graphql
+query {
+  getAccountBalance(nationalIdCode: "1234567890")
+}
+```
+
+Response:
+
+```json
+{
+  "data": {
+    "getAccountBalance": 50.0
+  }
+}
+```
+
+## Tests
+
+We can write tests for our GraphQL API using tools like Jest and Supertest.
+
+Test creating a new client
+
+```typescript
+import { createTestClient } from 'apollo-server-testing';
+import { ApolloServer } from 'apollo-server-express';
+import { gql } from 'apollo-server-core';
+import { schema } from './schema';
+import { Client } from './client.model';
+import { getClientById } from './client.repository';
+
+const CREATE_CLIENT_MUTATION = gql`
+  mutation {
+    createClient(input: {
+      name: "John Doe",
+      nationalIdCode: "1234567890"
+    }) {
+      id
+      name
+      nationalIdCode
+    }
+  }
+`;
+
+describe('createClient mutation', () => {
+  it('creates a new client', async () => {
+    const server = new ApolloServer({ schema });
+    const { mutate } = createTestClient(server);
+
+    const res = await mutate({
+      mutation: CREATE_CLIENT_MUTATION,
+    });
+
+    expect(res.errors).toBeUndefined();
+    expect(res.data).toBeDefined();
+    expect(res.data.createClient.id).toBeDefined();
+    expect(res.data.createClient.name).toEqual('John Doe');
+    expect(res.data.createClient.nationalIdCode).toEqual('1234567890');
+
+    const createdClient = await getClientById(res.data.createClient.id);
+    expect(createdClient).toMatchObject({
+      id: res.data.createClient.id,
+      name: 'John Doe',
+      nationalIdCode: '1234567890',
+    });
+  });
+});
+```
+
+Test creating a new transaction
+
+```typescript
+import { createTestClient } from 'apollo-server-testing';
+import { ApolloServer } from 'apollo-server-express';
+import { gql } from 'apollo-server-core';
+import { schema } from './schema';
+import { Transaction } from './transaction.model';
+import { getTransactionById } from './transaction.repository';
+
+const CREATE_TRANSACTION_MUTATION = gql`
+  mutation {
+    createTransaction(input: {
+      senderNationalIdCode: "1234567890",
+      receiverNationalIdCode: "0987654321",
+      amount: 100.0
+    }) {
+      id
+      sender {
+        id
+        nationalIdCode
+      }
+      receiver {
+        id
+        nationalIdCode
+      }
+      amount
+    }
+  }
+`;
+
+describe('createTransaction mutation', () => {
+  it('creates a new transaction', async () => {
+    const server = new ApolloServer({ schema });
+    const { mutate } = createTestClient(server);
+
+    const res = await mutate({
+      mutation: CREATE_TRANSACTION_MUTATION,
+    });
+
+    expect(res.errors).toBeUndefined();
+    expect(res.data).toBeDefined();
+    expect(res.data.createTransaction.id).toBeDefined();
+    expect(res.data.createTransaction.sender.id).toBeDefined();
+    expect(res.data.createTransaction.sender.nationalIdCode).toEqual('1234567890');
+    expect(res.data.createTransaction.receiver.id).toBeDefined();
+    expect(res.data.createTransaction.receiver.nationalIdCode).toEqual('0987654321');
+    expect(res.data.createTransaction.amount).toEqual(100.0);
+
+    const createdTransaction = await getTransactionById(res.data.createTransaction.id);
+    expect(createdTransaction).toMatchObject({
+      id: res.data.createTransaction.id,
+      senderId: res.data.createTransaction.sender.id,
+      receiverId: res.data.createTransaction.receiver.id,
+      amount: 100.0,
+    });
+  });
+});
+```
+
+Test getting all transactions
+
+```
+import { createTestClient } from 'apollo-server-testing';
+import { ApolloServer } from 'apollo-server-express';
+import { schema } from './schema';
+import { Transaction } from './transaction.model';
+import { getAllTransactions } from './transaction.repository';
+import { gql } from '...';
+
+const GET_ALL_TRANSACTIONS_QUERY = gql query { getAllTransactions { id sender { id nationalIdCode } receiver { id nationalIdCode } amount } };
+
+describe('getAllTransactions query', () => {
+ it('returns all transactions', async () => {
+   // Seed the database with some transactions
+   await Transaction.create({
+    senderId: '1',
+    receiverId: '2',
+    amount: 50.0,
+   });
+   await Transaction.create({
+    senderId: '2',
+    receiverId: '3',
+    amount: 25.0,
+   });
+
+  const server = new ApolloServer({ schema });
+  const { query } = createTestClient(server);
+
+  const res = await query({
+    query: GET_ALL_TRANSACTIONS_QUERY,
+  });
+
+  expect(res.errors).toBeUndefined();
+  expect(res.data).toBeDefined();
+  expect(res.data.getAllTransactions.length).toEqual(2);
+  expect(res.data.getAllTransactions[0].id).toBeDefined();
+  expect(res.data.getAllTransactions[0].sender.id).toBeDefined();
+  expect(res.data.getAllTransactions[0].sender.nationalIdCode).toEqual('1234567890');
+  expect(res.data.getAllTransactions[0].receiver.id).toBeDefined();
+  expect(res.data.getAllTransactions[0].receiver.nationalIdCode).toEqual('0987654321');
+  expect(res.data.getAllTransactions[0].amount).toEqual(50.0);
+  expect(res.data.getAllTransactions[1].id).toBeDefined();
+  expect(res.data.getAllTransactions[1].sender.id).toBeDefined();
+  expect(res.data.getAllTransactions[1].sender.nationalIdCode).toEqual('0987654321');
+  expect(res.data.getAllTransactions[1].receiver.id).toBeDefined();
+  expect(res.data.getAllTransactions[1].receiver.nationalIdCode).toEqual('1357908642');
+  expect(res.data.getAllTransactions[1].amount).toEqual(25.0);
+
+  const allTransactions = await getAllTransactions();
+  expect(allTransactions.length).toEqual(2);
+ });
+});
+```
+
 ## Conclusion
 
 This GraphQL-based API project provides a secure and efficient way to handle transactions and calculate the balance of client accounts in a bank system. The project utilizes TypeScript, NestJS, and MariaDB, and incorporates SQL transactions to ensure data integrity.
