@@ -34,36 +34,32 @@ DATABASE_NAME=<your database name>
 This project provides the following GraphQL API endpoints:
 
 - Client
- - createClient - create a new client
- - getAllClients - get all clients
- - getClient - get client information by national ID code
- - updateClient - update client information by national ID code
- - deleteClient - delete client information by national ID code
-
+   - createClient - create a new client
+   - getAllClients - get all clients
+   - getClient - get client information by national ID code
+   - updateClient - update client information by national ID code
+   - deleteClient - delete client information by national ID code
 - Account
- - createAccount - create a new account for a client
- - getAllAccounts - get all accounts for a client
- - getAccount - get account information by account ID
- - updateAccount - update account information by account ID
- - deleteAccount - delete account information by account ID
-
+   - createAccount - create a new account for a client
+   - getAllAccounts - get all accounts for a client
+   - getAccount - get account information by account ID
+   - updateAccount - update account information by account ID
+   - deleteAccount - delete account information by account ID
 - Transaction
- - createTransaction - create a new transaction
- - getTransaction - get transaction information by transaction ID
-
+   - createTransaction - create a new transaction
+   - getTransaction - get transaction information by transaction ID
 - Branch
- - createBranch - create a new branch
- - getAllBranches - get all branches
- - getBranch - get branch information by branch ID
- - updateBranch - update branch information by branch ID
- - deleteBranch - delete branch information by branch ID
-
+   - createBranch - create a new branch
+   - getAllBranches - get all branches
+   - getBranch - get branch information by branch ID
+   - updateBranch - update branch information by branch ID
+   - deleteBranch - delete branch information by branch ID
 - Employee
- - createEmployee - create a new employee
- - getAllEmployees - get all employees
- - getEmployee - get employee information by employee ID
- - updateEmployee - update employee information by employee ID
- - deleteEmployee - delete employee information by employee ID
+   - createEmployee - create a new employee
+   - getAllEmployees - get all employees
+   - getEmployee - get employee information by employee ID
+   - updateEmployee - update employee information by employee ID
+   - deleteEmployee - delete employee information by employee ID
 
 ## SQL Transactions
 
