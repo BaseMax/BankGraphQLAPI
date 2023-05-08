@@ -39,21 +39,25 @@ This project provides the following GraphQL API endpoints:
  - getClient - get client information by national ID code
  - updateClient - update client information by national ID code
  - deleteClient - delete client information by national ID code
+
 - Account
  - createAccount - create a new account for a client
  - getAllAccounts - get all accounts for a client
  - getAccount - get account information by account ID
  - updateAccount - update account information by account ID
  - deleteAccount - delete account information by account ID
+
 - Transaction
  - createTransaction - create a new transaction
  - getTransaction - get transaction information by transaction ID
+
 - Branch
  - createBranch - create a new branch
  - getAllBranches - get all branches
  - getBranch - get branch information by branch ID
  - updateBranch - update branch information by branch ID
  - deleteBranch - delete branch information by branch ID
+
 - Employee
  - createEmployee - create a new employee
  - getAllEmployees - get all employees
@@ -64,6 +68,179 @@ This project provides the following GraphQL API endpoints:
 ## SQL Transactions
 
 This project utilizes SQL transactions to ensure data integrity when moving money. When a transaction is initiated, the server first checks if the account has sufficient funds. If so, the transaction is executed and the funds are transferred. If not, the transaction is rolled back and an error message is returned. This process ensures that the database remains in a consistent state, even in the case of unexpected errors.
+
+## Testing GraphQL API
+
+To test the GraphQL API, we can use a tool such as GraphiQL or Apollo Studio Explorer. These tools allow us to send queries and mutations to the API and view the responses.
+
+### Examples
+
+Create a new client
+
+```graphql
+mutation {
+  createClient(input: {
+    nationalIdCode: "1234567890",
+    firstName: "John",
+    lastName: "Doe",
+    email: "johndoe@example.com"
+  }) {
+    id
+    nationalIdCode
+    firstName
+    lastName
+    email
+  }
+}
+```
+
+Response:
+
+```json
+{
+  "data": {
+    "createClient": {
+      "id": "1",
+      "nationalIdCode": "1234567890",
+      "firstName": "John",
+      "lastName": "Doe",
+      "email": "johndoe@example.com"
+    }
+  }
+}
+```
+
+Get all clients
+
+```graphql
+query {
+  getAllClients {
+    id
+    nationalIdCode
+    firstName
+    lastName
+    email
+  }
+}
+```
+
+Response:
+
+```json
+{
+  "data": {
+    "getAllClients": [
+      {
+        "id": "1",
+        "nationalIdCode": "1234567890",
+        "firstName": "John",
+        "lastName": "Doe",
+        "email": "johndoe@example.com"
+      },
+      {
+        "id": "2",
+        "nationalIdCode": "0987654321",
+        "firstName": "Jane",
+        "lastName": "Doe",
+        "email": "janedoe@example.com"
+      }
+    ]
+  }
+}
+```
+
+Get client by national ID code
+
+```graphql
+query {
+  getClient(nationalIdCode: "1234567890") {
+    id
+    nationalIdCode
+    firstName
+    lastName
+    email
+  }
+}
+```
+
+Response:
+
+```json
+{
+  "data": {
+    "getClient": {
+      "id": "1",
+      "nationalIdCode": "1234567890",
+      "firstName": "John",
+      "lastName": "Doe",
+      "email": "johndoe@example.com"
+    }
+  }
+}
+```
+
+Update client information
+
+```graphql
+mutation {
+  updateClient(nationalIdCode: "1234567890", input: {
+    firstName: "Johnny",
+    lastName: "Doe",
+    email: "johnnydoe@example.com"
+  }) {
+    id
+    nationalIdCode
+    firstName
+    lastName
+    email
+  }
+}
+```
+
+Response:
+
+```json
+{
+  "data": {
+    "updateClient": {
+      "id": "1",
+      "nationalIdCode": "1234567890",
+      "firstName": "Johnny",
+      "lastName": "Doe",
+      "email": "johnnydoe@example.com"
+    }
+  }
+}
+```
+
+Delete client information
+
+```graphql
+mutation {
+  deleteClient(nationalIdCode: "1234567890") {
+    id
+    nationalIdCode
+    firstName
+    lastName
+    email
+  }
+}
+```
+
+Response:
+
+```json
+{
+  "data": {
+    "deleteClient": {
+      "id": "1",
+      "nationalIdCode": "1234567890",
+      "firstName": "Johnny",
+      "lastName": "Doe",
+      "email": "johnnydoe@example.com"
+    }
+}
+```
 
 ## Conclusion
 
