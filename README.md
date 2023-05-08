@@ -585,6 +585,8 @@ describe('getAllTransactions query', () => {
 });
 ```
 
+These tests cover some basic functionality of our GraphQL API, but you should write more tests to cover all possible scenarios and edge cases.
+
 ## Conclusion
 
 This GraphQL-based API project provides a secure and efficient way to handle transactions and calculate the balance of client accounts in a bank system. The project utilizes TypeScript, NestJS, and MariaDB, and incorporates SQL transactions to ensure data integrity.
