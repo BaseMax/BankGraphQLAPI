@@ -528,7 +528,7 @@ describe('createTransaction mutation', () => {
 
 Test getting all transactions
 
-```
+```typescript
 import { createTestClient } from 'apollo-server-testing';
 import { ApolloServer } from 'apollo-server-express';
 import { schema } from './schema';
