@@ -1,0 +1,35 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Client {
+  id: ID!
+  nationalIdCode: NationalID!
+  firstName: String!
+  lastName: String!
+  email: String!
+}
+
+scalar NationalID
+
+type Query {
+  clients: [Client!]!
+  client(id: Int!): Client!
+}
+
+type Mutation {
+  createClient(createClientInput: CreateClientInput!): Client!
+  updateClient(updateClientInput: UpdateClientInput!): Client!
+  removeClient(id: Int!): Client!
+}
+
+input CreateClientInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateClientInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
