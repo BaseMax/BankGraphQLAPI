@@ -1,35 +1,43 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
-import { ClientsService } from './clients.service';
-import { Client } from './client.model';
-import { CreateClientInput } from './dto/create-client.input';
-import { UpdateClientInput } from './dto/update-client.input';
+import { Resolver, Query, Mutation, Args } from "@nestjs/graphql";
+import { ClientsService } from "./clients.service";
+import { CreateClientInput } from "./dto/create-client.input";
+import { UpdateClientInput } from "./dto/update-client.input";
+import { Client } from "./entities/client.entity";
+// import { NationalIDScalar } from "src/national-id.scalar";
 
 @Resolver(() => Client)
 export class ClientsResolver {
-  constructor(private readonly clientsService: ClientsService) {}
+  constructor(private readonly clientService: ClientsService) {}
 
   @Mutation(() => Client)
-  createClient(@Args('createClientInput') createClientInput: CreateClientInput) {
-    return this.clientsService.create(createClientInput);
+  async createClient(@Args("input") input: CreateClientInput): Promise<Client> {
+    return this.clientService.createClient(input);
   }
 
-  @Query(() => [Client], { name: 'clients' })
-  findAll() {
-    return this.clientsService.findAll();
+  @Query(() => [Client])
+  async getAllClients(): Promise<Client[]> {
+    return this.clientService.getAllClients();
   }
 
-  @Query(() => Client, { name: 'client' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.clientsService.findOne(id);
-  }
-
-  @Mutation(() => Client)
-  updateClient(@Args('updateClientInput') updateClientInput: UpdateClientInput) {
-    return this.clientsService.update(updateClientInput.id, updateClientInput);
+  @Query(() => Client)
+  async getClient(
+    @Args("nationalIdCode") nationalIdCode: string
+  ): Promise<Client> {
+    return this.clientService.getClientByNationalIdCode(nationalIdCode);
   }
 
   @Mutation(() => Client)
-  removeClient(@Args('id', { type: () => Int }) id: number) {
-    return this.clientsService.remove(id);
+  async updateClient(
+    @Args("nationalIdCode") nationalIdCode: string,
+    @Args("input") input: UpdateClientInput
+  ): Promise<Client> {
+    return this.clientService.updateClient(nationalIdCode, input);
+  }
+
+  @Mutation(() => Client)
+  async deleteClient(
+    @Args("nationalIdCode") nationalIdCode: string
+  ): Promise<Client> {
+    return this.clientService.deleteClient(nationalIdCode);
   }
 }
