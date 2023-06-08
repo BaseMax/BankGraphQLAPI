@@ -21,6 +21,6 @@ export class Client {
   @Field(() => String)
   email: string;
 
-  @Field(() => Account)
+  @Field(() => Account, { nullable: true })
   accounts?: Account[];
 }

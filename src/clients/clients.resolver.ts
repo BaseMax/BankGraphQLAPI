@@ -1,13 +1,25 @@
-import { Resolver, Query, Mutation, Args } from "@nestjs/graphql";
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  ResolveField,
+  Parent,
+} from "@nestjs/graphql";
 import { ClientsService } from "./clients.service";
 import { CreateClientInput } from "./dto/create-client.input";
 import { UpdateClientInput } from "./dto/update-client.input";
 import { Client } from "./entities/client.entity";
+import { Account } from "@prisma/client";
+import { PrismaService } from "src/prisma/prisma.service";
 // import { NationalIDScalar } from "src/national-id.scalar";
 
 @Resolver(() => Client)
 export class ClientsResolver {
-  constructor(private readonly clientService: ClientsService) {}
+  constructor(
+    private readonly clientService: ClientsService,
+    private readonly prisma: PrismaService
+  ) {}
 
   @Mutation(() => Client)
   async createClient(@Args("input") input: CreateClientInput): Promise<Client> {
