@@ -9,27 +9,27 @@ export class BranchesResolver {
   constructor(private readonly branchesService: BranchesService) {}
 
   @Mutation(() => Branch)
-  async createBranch(@Args("input") input: CreateBranchInput): Promise<Branch> {
+  async createBranch(@Args("input") input: CreateBranchInput) {
     return this.branchesService.createBranch(input);
   }
 
   @Query(() => [Branch])
-  async getAllBranches(): Promise<Branch[]> {
+  async getAllBranches() {
     return this.branchesService.getAllBranches();
   }
 
   @Query(() => Branch)
-  async getBranch(@Args("id") id: string): Promise<Branch> {
+  async getBranch(@Args("id") id: string) {
     return this.branchesService.getBranch(id);
   }
 
   @Mutation(() => Branch)
-  async updateBranch(@Args("input") input: UpdateBranchInput): Promise<Branch> {
+  async updateBranch(@Args("input") input: UpdateBranchInput) {
     return this.branchesService.updateBranch(input);
   }
 
   @Mutation(() => Branch)
-  async deleteBranch(@Args("id") id: string): Promise<Branch> {
+  async deleteBranch(@Args("id") id: string) {
     return this.branchesService.deleteBranch(id);
   }
 }

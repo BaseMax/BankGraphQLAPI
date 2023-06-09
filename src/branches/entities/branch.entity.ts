@@ -13,5 +13,5 @@ export class Branch {
   address: string;
 
   @Field(() => Employee)
-  employees?: Employee[];
+  employees: Employee[];
 }
