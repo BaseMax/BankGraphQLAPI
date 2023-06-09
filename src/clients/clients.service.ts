@@ -1,49 +1,43 @@
 import { Injectable } from "@nestjs/common";
 import { CreateClientInput } from "./dto/create-client.input";
 import { UpdateClientInput } from "./dto/update-client.input";
-import { Client } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
-// import { NationalIDScalar } from "src/national-id.scalar";
 
 @Injectable()
 export class ClientsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createClient(input: CreateClientInput): Promise<Client> {
+  async createClient(input: CreateClientInput) {
     return await this.prisma.client.create({
       data: input,
     });
   }
 
-  async getAllClients(): Promise<Client[]> {
+  async getAllClients() {
     return await this.prisma.client.findMany({
       include: {
         accounts: true,
       },
-    }); 
+    });
   }
 
-  async getClientByNationalIdCode(nationalIdCode: string): Promise<Client> {
+  async getClientByNationalIdCode(nationalIdCode: string) {
     return await this.prisma.client.findUnique({
       where: {
         nationalIdCode,
       },
+      include: { accounts: true },
     });
   }
 
-  async updateClient(
-    nationalIdCode: string,
-    input: UpdateClientInput
-  ): Promise<Client> {
+  async updateClient(input: UpdateClientInput) {
     return await this.prisma.client.update({
-      where: {
-        nationalIdCode,
-      },
+      where: { nationalIdCode: input.nationalIdCode },
       data: input,
     });
   }
 
-  async deleteClient(nationalIdCode: string): Promise<Client> {
+  async deleteClient(nationalIdCode: string) {
     return await this.prisma.client.delete({
       where: {
         nationalIdCode,
