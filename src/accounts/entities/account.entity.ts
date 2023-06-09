@@ -20,8 +20,8 @@ export class Account {
   clientId: string;
 
   @Field(() => Transaction)
-  outgoingTransactions?: Transaction[];
+  outgoingTransactions: Transaction[];
 
   @Field(() => Transaction)
-  incomingTransactions?: Transaction[];
+  incomingTransactions: Transaction[];
 }

@@ -9,30 +9,27 @@ export class AccountsResolver {
   constructor(private readonly accountService: AccountsService) {}
 
   @Mutation(() => Account)
-  async createAccount(@Args("input") input: CreateAccountInput){
+  createAccount(@Args("input") input: CreateAccountInput) {
     return this.accountService.createAccount(input);
   }
 
   @Query(() => [Account])
-  async getAllAccounts(@Args("nationalIdCode") nationalIdCode: string) {
-    return this.accountService.getAllAccounts(nationalIdCode);
+  getAllAccounts(@Args("clientId") clientId: string) {
+    return this.accountService.getAllAccounts(clientId);
   }
 
   @Query(() => Account)
-  async getAccount(@Args("accountId") accountId: string) {
-    return this.accountService.getAccount(accountId);
+  getAccount(@Args("id") id: string) {
+    return this.accountService.getAccount(id);
   }
 
   @Mutation(() => Account)
-  async updateAccount(
-    @Args("accountId") accountId: string,
-    @Args("input") input: UpdateAccountInput
-  ) {
-    return this.accountService.updateAccount(accountId, input);
+  updateAccount(@Args("input") input: UpdateAccountInput) {
+    return this.accountService.updateAccount(input);
   }
 
   @Mutation(() => Account)
-  async deleteAccount(@Args("accountId") accountId: string) {
-    return this.accountService.deleteAccount(accountId);
+  deleteAccount(@Args("id") id: string) {
+    return this.accountService.deleteAccount(id);
   }
 }

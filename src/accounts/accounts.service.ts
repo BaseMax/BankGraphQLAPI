@@ -1,71 +1,50 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { CreateAccountInput } from "./dto/create-account.input";
 import { UpdateAccountInput } from "./dto/update-account.input";
 import { PrismaService } from "src/prisma/prisma.service";
-import { Account } from "@prisma/client";
-import { Args } from "@nestjs/graphql";
-import { Client } from "src/clients/entities/client.entity";
 
 @Injectable()
 export class AccountsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createAccount(
-    @Args("input") input: CreateAccountInput
-  ): Promise<Account> {
-    const { clientId, ...rest } = input;
-    const client: Client = await this.prisma.client.findUnique({
-      where: { id: clientId },
-    });
-    if (!client) {
-      throw new NotFoundException(`Client with ID ${clientId} not found`);
-    }
-    return await this.prisma.account.create({
-      data: {
-        ...rest,
-        client: { connect: { id: client.id } },
-      },
+  async createAccount(input: CreateAccountInput) {
+    return this.prisma.account.create({
+      data: { ...input, accountNumber: Math.random().toString() },
     });
   }
 
-  async getAllAccounts(nationalIdCode: string): Promise<Account[]> {
+  async getAllAccounts(clientId: string) {
     return this.prisma.account.findMany({
-      where: {
-        client: {
-          nationalIdCode,
-        },
-      },
+      where: { clientId },
       include: {
         client: true,
+        outgoingTransactions: true,
+        incomingTransactions: true,
       },
     });
   }
 
-  async getAccount(accountId: string): Promise<Account> {
+  async getAccount(id: string) {
     return this.prisma.account.findUnique({
-      where: {
-        id: accountId,
+      where: { id },
+      include: {
+        client: true,
+        outgoingTransactions: true,
+        incomingTransactions: true,
       },
     });
   }
 
-  async updateAccount(
-    accountId: string,
-    input: UpdateAccountInput
-  ): Promise<Account> {
+  async updateAccount(input: UpdateAccountInput) {
     return this.prisma.account.update({
-      where: {
-        id: accountId,
-      },
+      where: { id: input.id },
       data: input,
     });
   }
 
-  async deleteAccount(accountId: string): Promise<Account> {
+  async deleteAccount(id: string) {
     return this.prisma.account.delete({
-      where: {
-        id: accountId,
-      },
+      where: { id },
     });
   }
 }
