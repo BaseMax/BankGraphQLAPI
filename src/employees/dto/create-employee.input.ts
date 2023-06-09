@@ -1,12 +1,8 @@
-import { InputType, Field } from "@nestjs/graphql";
+import { InputType, Field } from '@nestjs/graphql';
 import { IsEmail } from "class-validator";
-import { NationalIDScalar } from "src/national-id.scalar";
 
 @InputType()
-export class CreateClientInput {
-  @Field(() => NationalIDScalar)
-  nationalIdCode: string;
-
+export class CreateEmployeeInput {
   @Field(() => String)
   firstName: string;
 
@@ -16,4 +12,7 @@ export class CreateClientInput {
   @IsEmail({}, { message: "Invalid email address" })
   @Field(() => String)
   email: string;
+
+  @Field(() => String)
+  branchId: string;
 }

@@ -2,29 +2,78 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Client {
-  """Example field (placeholder)"""
-  exampleField: Int!
+type Transaction {
+  id: ID!
+  amount: Float!
+  sender: Account!
+  senderId: String!
+  receiver: Account!
+  receiverId: String!
+  createdAt: DateTime!
 }
 
-input CreateClientInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Account {
+  id: ID!
+  accountNumber: String!
+  balance: Float!
+  client: Client!
+  clientId: String!
+  outgoingTransactions: Transaction!
+  incomingTransactions: Transaction!
+}
+
+type Client {
+  id: ID!
+  nationalIdCode: NationalID!
+  firstName: String!
+  lastName: String!
+  email: String!
+  accounts: Account
+}
+
+scalar NationalID
+
+type Query {
+  getAllClients: [Client!]!
+  getClient(nationalIdCode: String!): Client!
+  getAllAccounts(clientId: String!): [Account!]!
+  getAccount(id: String!): Account!
 }
 
 type Mutation {
-  createClient(createClientInput: CreateClientInput!): Client!
-  removeClient(id: Int!): Client!
-  updateClient(updateClientInput: UpdateClientInput!): Client!
+  createClient(input: CreateClientInput!): Client!
+  updateClient(input: UpdateClientInput!): Client!
+  deleteClient(nationalIdCode: String!): Client!
+  createAccount(input: CreateAccountInput!): Account!
+  updateAccount(input: UpdateAccountInput!): Account!
+  deleteAccount(id: String!): Account!
 }
 
-type Query {
-  client(id: Int!): Client!
-  clients: [Client!]!
+input CreateClientInput {
+  nationalIdCode: NationalID!
+  firstName: String!
+  lastName: String!
+  email: String!
 }
 
 input UpdateClientInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  nationalIdCode: NationalID!
+  firstName: String!
+  lastName: String!
+  email: String!
+}
+
+input CreateAccountInput {
+  clientId: String!
+}
+
+input UpdateAccountInput {
+  clientId: String
+  id: ID!
+  balance: Float!
 }

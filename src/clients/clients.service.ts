@@ -1,26 +1,47 @@
-import { Injectable } from '@nestjs/common';
-import { CreateClientInput } from './dto/create-client.input';
-import { UpdateClientInput } from './dto/update-client.input';
+import { Injectable } from "@nestjs/common";
+import { CreateClientInput } from "./dto/create-client.input";
+import { UpdateClientInput } from "./dto/update-client.input";
+import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 export class ClientsService {
-  create(createClientInput: CreateClientInput) {
-    return 'This action adds a new client';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async createClient(input: CreateClientInput) {
+    return await this.prisma.client.create({
+      data: input,
+    });
   }
 
-  findAll() {
-    return `This action returns all clients`;
+  async getAllClients() {
+    return await this.prisma.client.findMany({
+      include: {
+        accounts: true,
+      },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} client`;
+  async getClientByNationalIdCode(nationalIdCode: string) {
+    return await this.prisma.client.findUnique({
+      where: {
+        nationalIdCode,
+      },
+      include: { accounts: true },
+    });
   }
 
-  update(id: number, updateClientInput: UpdateClientInput) {
-    return `This action updates a #${id} client`;
+  async updateClient(input: UpdateClientInput) {
+    return await this.prisma.client.update({
+      where: { nationalIdCode: input.nationalIdCode },
+      data: input,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} client`;
+  async deleteClient(nationalIdCode: string) {
+    return await this.prisma.client.delete({
+      where: {
+        nationalIdCode,
+      },
+    });
   }
 }
