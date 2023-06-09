@@ -3,14 +3,11 @@ import {
   Query,
   Mutation,
   Args,
-  ResolveField,
-  Parent,
 } from "@nestjs/graphql";
 import { ClientsService } from "./clients.service";
 import { CreateClientInput } from "./dto/create-client.input";
 import { UpdateClientInput } from "./dto/update-client.input";
 import { Client } from "./entities/client.entity";
-import { Account } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
 // import { NationalIDScalar } from "src/national-id.scalar";
 

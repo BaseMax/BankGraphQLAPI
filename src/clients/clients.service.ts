@@ -3,8 +3,6 @@ import { CreateClientInput } from "./dto/create-client.input";
 import { UpdateClientInput } from "./dto/update-client.input";
 import { Client } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
-import { Parent, ResolveField } from "@nestjs/graphql";
-import { Account } from "src/accounts/entities/account.entity";
 // import { NationalIDScalar } from "src/national-id.scalar";
 
 @Injectable()
@@ -51,10 +49,5 @@ export class ClientsService {
         nationalIdCode,
       },
     });
-  }
-
-  @ResolveField(() => [Account])
-  async accounts(@Parent() client: Client) {
-    return this.prisma.account.findMany({ where: { clientId: client.id } });
   }
 }

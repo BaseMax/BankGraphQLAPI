@@ -3,7 +3,7 @@ import { CreateAccountInput } from "./dto/create-account.input";
 import { UpdateAccountInput } from "./dto/update-account.input";
 import { PrismaService } from "src/prisma/prisma.service";
 import { Account } from "@prisma/client";
-import { Args, Parent, ResolveField } from "@nestjs/graphql";
+import { Args } from "@nestjs/graphql";
 import { Client } from "src/clients/entities/client.entity";
 
 @Injectable()
